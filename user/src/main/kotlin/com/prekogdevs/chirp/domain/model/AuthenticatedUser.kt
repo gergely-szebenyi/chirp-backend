@@ -1,4 +1,4 @@
-package com.prekogdevs.user.domain.model
+package com.prekogdevs.chirp.domain.model
 
 data class AuthenticatedUser(
     val user: User,
