@@ -12,6 +12,8 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    api(libs.kotlin.reflect)
+    api(libs.jackson.module.kotlin)
 }
 
 tasks.test {
