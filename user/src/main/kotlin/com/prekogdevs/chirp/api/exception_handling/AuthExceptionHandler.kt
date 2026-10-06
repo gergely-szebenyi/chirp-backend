@@ -1,5 +1,6 @@
 package com.prekogdevs.chirp.api.exception_handling
 
+import com.prekogdevs.chirp.domain.exception.InvalidTokenException
 import com.prekogdevs.chirp.domain.exception.UserAlreadyExistsException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -36,4 +37,13 @@ class AuthExceptionHandler {
                 )
             )
     }
+
+    @ExceptionHandler(InvalidTokenException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun onInvalidToken(
+        e: InvalidTokenException
+    ) = mapOf(
+        "code" to "INVALID_TOKEN",
+        "message" to e.message
+    )
 }
