@@ -7,8 +7,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import java.util.Date
-import java.util.UUID
+import java.util.*
 import kotlin.io.encoding.Base64
 
 @Service
@@ -75,7 +74,7 @@ class JwtService(
     }
 
     private fun parseAllClaims(token: String): Claims? {
-        val rawToken = if(token.startsWith("Bearer ")) {
+        val rawToken = if (token.startsWith("Bearer ")) {
             token.removePrefix("Bearer ")
         } else token
 
