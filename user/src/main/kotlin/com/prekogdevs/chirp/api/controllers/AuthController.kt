@@ -1,9 +1,6 @@
 package com.prekogdevs.chirp.api.controllers
 
-import com.prekogdevs.chirp.api.dto.AuthenticatedUserDto
-import com.prekogdevs.chirp.api.dto.LoginRequest
-import com.prekogdevs.chirp.api.dto.RegisterRequest
-import com.prekogdevs.chirp.api.dto.UserDto
+import com.prekogdevs.chirp.api.dto.*
 import com.prekogdevs.chirp.api.mappers.toAuthenticatedUserDto
 import com.prekogdevs.chirp.api.mappers.toUserDto
 import com.prekogdevs.chirp.service.auth.AuthService
@@ -36,5 +33,14 @@ class AuthController(private val authService: AuthService) {
             email = body.email,
             password = body.password
         ).toAuthenticatedUserDto()
+    }
+
+    @PostMapping("/refresh")
+    fun refresh(
+        @RequestBody body: RefreshRequest
+    ): AuthenticatedUserDto {
+        return authService
+            .refresh(body.refreshToken)
+            .toAuthenticatedUserDto()
     }
 }
