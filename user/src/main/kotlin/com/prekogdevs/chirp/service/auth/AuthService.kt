@@ -133,4 +133,11 @@ class AuthService(
         val hashBytes = digest.digest(token.encodeToByteArray())
         return Base64.getEncoder().encodeToString(hashBytes)
     }
+
+    @Transactional
+    fun logout(refreshToken: String) {
+        val userId = jwtService.getUserIdFromToken(refreshToken)
+        val hashed = hashToken(refreshToken)
+        refreshTokenRepository.deleteByUserIdAndHashedToken(userId, hashed)
+    }
 }
