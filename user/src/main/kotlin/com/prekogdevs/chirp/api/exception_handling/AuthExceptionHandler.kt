@@ -72,4 +72,13 @@ class AuthExceptionHandler {
         "code" to "EMAIL_NOT_VERIFIED",
         "message" to e.message
     )
+
+    @ExceptionHandler(SamePasswordException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun onSamePassword(
+        e: SamePasswordException
+    ) = mapOf(
+        "code" to "SAME_PASSWORD",
+        "message" to e.message
+    )
 }
