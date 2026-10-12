@@ -1,32 +1,22 @@
 package com.prekogdevs.chirp.api.controllers
 
-import com.prekogdevs.chirp.api.dto.AuthenticatedUserDto
-import com.prekogdevs.chirp.api.dto.ChangePasswordRequest
-import com.prekogdevs.chirp.api.dto.EmailRequest
-import com.prekogdevs.chirp.api.dto.LoginRequest
-import com.prekogdevs.chirp.api.dto.RefreshRequest
-import com.prekogdevs.chirp.api.dto.RegisterRequest
-import com.prekogdevs.chirp.api.dto.ResetPasswordRequest
-import com.prekogdevs.chirp.api.dto.UserDto
+import com.prekogdevs.chirp.api.dto.*
 import com.prekogdevs.chirp.api.mappers.toAuthenticatedUserDto
 import com.prekogdevs.chirp.api.mappers.toUserDto
+import com.prekogdevs.chirp.infra.rate_limiting.EmailRateLimiter
 import com.prekogdevs.chirp.service.PasswordResetService
 import com.prekogdevs.chirp.service.auth.AuthService
 import com.prekogdevs.chirp.service.auth.EmailVerificationService
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/auth")
 class AuthController(
     private val authService: AuthService,
     private val emailVerificationService: EmailVerificationService,
-    private val passwordResetService: PasswordResetService
+    private val passwordResetService: PasswordResetService,
+    private val emailRateLimiter: EmailRateLimiter
 ) {
 
     @PostMapping("/register")
@@ -95,5 +85,16 @@ class AuthController(
         @Valid @RequestBody body: ChangePasswordRequest
     ) {
         // TODO: Extract request user ID and call service
+    }
+
+    @PostMapping("/resend-verification")
+    fun resendVerification(
+        @Valid @RequestBody body: EmailRequest
+    ) {
+        emailRateLimiter.withRateLimit(
+            email = body.email
+        ) {
+            emailVerificationService.resendVerificationEmail(body.email)
+        }
     }
 }
