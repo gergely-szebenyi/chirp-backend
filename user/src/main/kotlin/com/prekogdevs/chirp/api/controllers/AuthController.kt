@@ -8,6 +8,7 @@ import com.prekogdevs.chirp.infra.rate_limiting.EmailRateLimiter
 import com.prekogdevs.chirp.service.PasswordResetService
 import com.prekogdevs.chirp.service.auth.AuthService
 import com.prekogdevs.chirp.service.auth.EmailVerificationService
+import com.prekogdevs.chirp.util.requestUserId
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 import java.util.concurrent.TimeUnit
@@ -106,7 +107,11 @@ class AuthController(
     fun changePassword(
         @Valid @RequestBody body: ChangePasswordRequest
     ) {
-        // TODO: Extract request user ID and call service
+        passwordResetService.changePassword(
+            userId = requestUserId,
+            oldPassword = body.oldPassword,
+            newPassword = body.newPassword
+        )
     }
 
     @PostMapping("/resend-verification")
