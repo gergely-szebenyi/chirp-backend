@@ -81,4 +81,13 @@ class AuthExceptionHandler {
         "code" to "SAME_PASSWORD",
         "message" to e.message
     )
+
+    @ExceptionHandler(RateLimitException::class)
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    fun onRateLimitExceeded(
+        e: RateLimitException
+    ) = mapOf(
+        "code" to "RATE_LIMIT_EXCEEDED",
+        "message" to e.message
+    )
 }

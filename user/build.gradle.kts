@@ -21,6 +21,7 @@ dependencies {
     runtimeOnly(libs.jwt.jackson)
     runtimeOnly(libs.postgresql)
     testImplementation(kotlin("test"))
+    implementation(libs.spring.boot.starter.data.redis)
 }
 
 tasks.test {
