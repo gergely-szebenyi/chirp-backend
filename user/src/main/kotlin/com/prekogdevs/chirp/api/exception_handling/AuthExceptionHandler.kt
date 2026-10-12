@@ -90,4 +90,13 @@ class AuthExceptionHandler {
         "code" to "RATE_LIMIT_EXCEEDED",
         "message" to e.message
     )
+
+    @ExceptionHandler(UnauthorizedException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun onUnauthorized(
+        e: UnauthorizedException
+    ) = mapOf(
+        "code" to "UNAUTHORIZED",
+        "message" to e.message
+    )
 }
