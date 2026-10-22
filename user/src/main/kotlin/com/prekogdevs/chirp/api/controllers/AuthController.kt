@@ -7,7 +7,7 @@ import com.prekogdevs.chirp.api.mappers.toUserDto
 import com.prekogdevs.chirp.infra.rate_limiting.EmailRateLimiter
 import com.prekogdevs.chirp.service.PasswordResetService
 import com.prekogdevs.chirp.service.auth.AuthService
-import com.prekogdevs.chirp.service.auth.EmailVerificationService
+import com.prekogdevs.chirp.service.EmailVerificationService
 import com.prekogdevs.chirp.util.requestUserId
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
