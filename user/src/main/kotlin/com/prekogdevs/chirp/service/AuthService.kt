@@ -1,6 +1,7 @@
 package com.prekogdevs.chirp.service.auth
 
 
+import com.prekogdevs.chirp.domain.events.user.UserEvent
 import com.prekogdevs.chirp.domain.exception.*
 import com.prekogdevs.chirp.domain.model.AuthenticatedUser
 import com.prekogdevs.chirp.domain.model.User
@@ -10,7 +11,9 @@ import com.prekogdevs.chirp.infra.database.entities.UserEntity
 import com.prekogdevs.chirp.infra.database.mappers.toUser
 import com.prekogdevs.chirp.infra.database.repositories.RefreshTokenRepository
 import com.prekogdevs.chirp.infra.database.repositories.UserRepository
+import com.prekogdevs.chirp.infra.message_queue.EventPublisher
 import com.prekogdevs.chirp.infra.security.PasswordEncoder
+import com.prekogdevs.chirp.service.EmailVerificationService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -24,7 +27,8 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val jwtService: JwtService,
     private val refreshTokenRepository: RefreshTokenRepository,
-    private val emailVerificationService: EmailVerificationService
+    private val emailVerificationService: EmailVerificationService,
+    private val eventPublisher: EventPublisher
 ) {
 
     @Transactional
@@ -47,6 +51,15 @@ class AuthService(
         ).toUser()
 
         val token = emailVerificationService.createVerificationToken(trimmedEmail)
+
+        eventPublisher.publish(
+            event = UserEvent.Created(
+                userId = savedUser.id,
+                email = savedUser.email,
+                username = savedUser.username,
+                verificationToken = token.token
+            )
+        )
 
         return savedUser
     }
