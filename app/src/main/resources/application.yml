@@ -76,6 +76,7 @@ jwt:
 
 chirp:
   email:
+    from: randompista@nenyisdmeg.hu
     verification:
       expiry-hours: 24
     reset-password:

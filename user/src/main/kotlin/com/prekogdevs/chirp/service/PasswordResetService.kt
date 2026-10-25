@@ -1,5 +1,6 @@
 package com.prekogdevs.chirp.service
 
+import com.prekogdevs.chirp.domain.events.user.UserEvent
 import com.prekogdevs.chirp.domain.exception.InvalidCredentialsException
 import com.prekogdevs.chirp.domain.exception.InvalidTokenException
 import com.prekogdevs.chirp.domain.exception.SamePasswordException
@@ -9,6 +10,7 @@ import com.prekogdevs.chirp.infra.database.entities.PasswordResetTokenEntity
 import com.prekogdevs.chirp.infra.database.repositories.PasswordResetTokenRepository
 import com.prekogdevs.chirp.infra.database.repositories.RefreshTokenRepository
 import com.prekogdevs.chirp.infra.database.repositories.UserRepository
+import com.prekogdevs.chirp.infra.message_queue.EventPublisher
 import com.prekogdevs.chirp.infra.security.PasswordEncoder
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
@@ -25,7 +27,8 @@ class PasswordResetService(
     private val passwordEncoder: PasswordEncoder,
     @param:Value("\${chirp.email.reset-password.expiry-minutes}")
     private val expiryMinutes: Long,
-    private val refreshTokenRepository: RefreshTokenRepository
+    private val refreshTokenRepository: RefreshTokenRepository,
+    private val eventPublisher: EventPublisher
 ) {
     @Transactional
     fun requestPasswordReset(email: String) {
@@ -39,7 +42,15 @@ class PasswordResetService(
         )
         passwordResetTokenRepository.save(token)
 
-        // TODO: Inform notification service about password reset trigger to send email
+        eventPublisher.publish(
+            event = UserEvent.RequestResetPassword(
+                userId = user.id!!,
+                email = user.email,
+                username = user.username,
+                passwordResetToken = token.token,
+                expiresInMinutes = expiryMinutes
+            )
+        )
     }
 
     @Transactional
@@ -61,10 +72,10 @@ class PasswordResetService(
             throw SamePasswordException()
         }
 
-        val hashedNewPassword = passwordEncoder.encode(newPassword)!!
+        val hashedNewPassword = passwordEncoder.encode(newPassword)
         userRepository.save(
             user.apply {
-                this.hashedPassword = hashedNewPassword
+                this.hashedPassword = hashedNewPassword!!
             }
         )
 
@@ -96,10 +107,10 @@ class PasswordResetService(
 
         refreshTokenRepository.deleteByUserId(user.id!!)
 
-        val newHashedPassword = passwordEncoder.encode(newPassword)!!
+        val newHashedPassword = passwordEncoder.encode(newPassword)
         userRepository.save(
             user.apply {
-                this.hashedPassword = newHashedPassword
+                this.hashedPassword = newHashedPassword!!
             }
         )
     }

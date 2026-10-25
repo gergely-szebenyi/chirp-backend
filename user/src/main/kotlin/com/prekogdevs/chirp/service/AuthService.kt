@@ -1,4 +1,4 @@
-package com.prekogdevs.chirp.service.auth
+package com.prekogdevs.chirp.service
 
 
 import com.prekogdevs.chirp.domain.events.user.UserEvent
@@ -13,7 +13,7 @@ import com.prekogdevs.chirp.infra.database.repositories.RefreshTokenRepository
 import com.prekogdevs.chirp.infra.database.repositories.UserRepository
 import com.prekogdevs.chirp.infra.message_queue.EventPublisher
 import com.prekogdevs.chirp.infra.security.PasswordEncoder
-import com.prekogdevs.chirp.service.EmailVerificationService
+import com.prekogdevs.chirp.service.auth.JwtService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
