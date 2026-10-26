@@ -1,7 +1,5 @@
-package com.prekogdevs.chirp.domain
+package com.prekogdevs.chirp.domain.models
 
-import com.prekogdevs.chirp.domain.models.ChatMessage
-import com.prekogdevs.chirp.domain.models.ChatParticipant
 import com.prekogdevs.chirp.domain.type.ChatId
 import java.time.Instant
 
