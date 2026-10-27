@@ -1,5 +1,7 @@
 package com.prekogdevs.chirp.service
 
+import com.prekogdevs.chirp.api.dto.ChatMessageDto
+import com.prekogdevs.chirp.infra.database.mappers.toChatMessageDto
 import com.prekogdevs.chirp.domain.exception.ChatNotFoundException
 import com.prekogdevs.chirp.domain.exception.ChatParticipantNotFoundException
 import com.prekogdevs.chirp.domain.exception.ForbiddenException
@@ -7,16 +9,18 @@ import com.prekogdevs.chirp.domain.exception.InvalidChatSizeException
 import com.prekogdevs.chirp.domain.models.Chat
 import com.prekogdevs.chirp.domain.models.ChatMessage
 import com.prekogdevs.chirp.domain.type.ChatId
-import com.prekogdevs.chirp.domain.type.UserId
 import com.prekogdevs.chirp.infra.database.entities.ChatEntity
 import com.prekogdevs.chirp.infra.database.mappers.toChat
-import com.prekogdevs.chirp.infra.database.mappers.toChatMessage
-import com.prekogdevs.chirp.infra.database.repositories.ChatMessageRepository
 import com.prekogdevs.chirp.infra.database.repositories.ChatParticipantRepository
 import com.prekogdevs.chirp.infra.database.repositories.ChatRepository
+import com.prekogdevs.chirp.domain.type.UserId
+import com.prekogdevs.chirp.infra.database.mappers.toChatMessage
+import com.prekogdevs.chirp.infra.database.repositories.ChatMessageRepository
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Service
 class ChatService(
@@ -24,6 +28,22 @@ class ChatService(
     private val chatParticipantRepository: ChatParticipantRepository,
     private val chatMessageRepository: ChatMessageRepository,
 ) {
+
+    fun getChatMessages(
+        chatId: ChatId,
+        before: Instant?,
+        pageSize: Int
+    ): List<ChatMessageDto> {
+        return chatMessageRepository
+            .findByChatIdBefore(
+                chatId = chatId,
+                before = before ?: Instant.now(),
+                pageable = PageRequest.of(0, pageSize)
+            )
+            .content
+            .asReversed()
+            .map { it.toChatMessage().toChatMessageDto() }
+    }
 
     @Transactional
     fun createChat(
