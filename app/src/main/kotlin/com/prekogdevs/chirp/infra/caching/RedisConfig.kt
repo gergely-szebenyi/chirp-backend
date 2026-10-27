@@ -30,6 +30,7 @@ class RedisConfig {
 
         val objectMapper = JsonMapper.builder()
             .addModule(kotlinModule())
+            .findAndAddModules()
             .polymorphicTypeValidator(polymorphicTypeValidator)
             .activateDefaultTyping(polymorphicTypeValidator, DefaultTyping.NON_FINAL)
             .build()

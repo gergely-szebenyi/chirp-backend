@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.prekogdevs.chirp.infra.message_queue
 
 import com.prekogdevs.chirp.ChirpEvent
