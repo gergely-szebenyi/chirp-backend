@@ -75,6 +75,11 @@ jwt:
   secret: ${JWT_SECRET_BASE64}
 
 chirp:
+  api-key:
+    expires-in-days: 365
+    admin:
+      username: ${ADMIN_USERNAME}
+      password: ${ADMIN_PASSWORD}
   email:
     from: randompista@nenyisdmeg.hu
     verification:
