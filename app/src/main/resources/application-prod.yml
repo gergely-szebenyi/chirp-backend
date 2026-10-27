@@ -5,6 +5,7 @@ spring:
   mail:
     host: smtp.mailgun.org
     username: chirp@sandbox360d67a20c874eb585fa613d41d20f82.mailgun.org
+    test-connection: true
 
 jwt:
   expiration-minutes: 15
