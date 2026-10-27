@@ -8,7 +8,7 @@ import com.prekogdevs.chirp.infra.rate_limiting.EmailRateLimiter
 import com.prekogdevs.chirp.service.PasswordResetService
 import com.prekogdevs.chirp.service.AuthService
 import com.prekogdevs.chirp.service.EmailVerificationService
-import com.prekogdevs.chirp.util.requestUserId
+import com.prekogdevs.chirp.api.util.requestUserId
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 import java.util.concurrent.TimeUnit
