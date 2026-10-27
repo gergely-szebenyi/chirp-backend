@@ -1,7 +1,7 @@
 package com.prekogdevs.chirp.service.auth
 
 import com.prekogdevs.chirp.domain.exception.InvalidTokenException
-import com.prekogdevs.chirp.domain.model.UserId
+import com.prekogdevs.chirp.domain.type.UserId
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -17,7 +17,7 @@ class JwtService(
 ) {
 
     private val secretKey = Keys.hmacShaKeyFor(
-        Base64.decode(secretBase64)
+        Base64.Default.decode(secretBase64)
     )
     private val accessTokenValidityMs = expirationMinutes * 60 * 1000L
     val refreshTokenValidityMs = 30 * 24 * 60 * 60 * 1000L
