@@ -12,6 +12,7 @@ import com.prekogdevs.chirp.api.dto.ws.OutgoingWebSocketMessageType
 import com.prekogdevs.chirp.api.dto.ws.ProfilePictureUpdateDto
 import com.prekogdevs.chirp.api.dto.ws.SendMessageDto
 import com.prekogdevs.chirp.infra.database.mappers.toChatMessageDto
+import com.prekogdevs.chirp.domain.event.ChatCreatedEvent
 import com.prekogdevs.chirp.domain.event.ChatParticipantLeftEvent
 import com.prekogdevs.chirp.domain.event.ChatParticipantsJoinedEvent
 import com.prekogdevs.chirp.domain.event.MessageDeletedEvent
@@ -336,6 +337,25 @@ class ChatWebSocketHandler(
                 }
             } catch(e: Exception) {
                 logger.error("Could not send profile picture update to session $sessionId", e)
+            }
+        }
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    fun onChatCreated(event: ChatCreatedEvent) {
+        connectionLock.write {
+            event.participantIds.forEach { userId ->
+                userChatIds.compute(userId) { _, chatIds ->
+                    (chatIds ?: mutableSetOf()).apply {
+                        add(event.chatId)
+                    }
+                }
+
+                userToSessions[userId]?.forEach { sessionId ->
+                    chatToSessions.compute(event.chatId) { _, sessions ->
+                        (sessions ?: mutableSetOf()).apply { add(sessionId) }
+                    }
+                }
             }
         }
     }

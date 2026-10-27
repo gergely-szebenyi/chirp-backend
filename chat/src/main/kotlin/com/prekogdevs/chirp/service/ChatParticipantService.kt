@@ -5,6 +5,7 @@ import com.prekogdevs.chirp.infra.database.mappers.toChatParticipant
 import com.prekogdevs.chirp.infra.database.mappers.toChatParticipantEntity
 import com.prekogdevs.chirp.infra.database.repositories.ChatParticipantRepository
 import com.prekogdevs.chirp.domain.type.UserId
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
