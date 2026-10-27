@@ -24,7 +24,7 @@ class AuthController(
 
     @PostMapping("/register")
     @IpRateLimit(
-        requests = 10,
+        requests = 50,
         duration = 1L,
         unit = TimeUnit.HOURS
     )
@@ -40,7 +40,7 @@ class AuthController(
 
     @PostMapping("/login")
     @IpRateLimit(
-        requests = 10,
+        requests = 50,
         duration = 1L,
         unit = TimeUnit.HOURS
     )
@@ -55,7 +55,7 @@ class AuthController(
 
     @PostMapping("/refresh")
     @IpRateLimit(
-        requests = 10,
+        requests = 50,
         duration = 1L,
         unit = TimeUnit.HOURS
     )
@@ -83,7 +83,7 @@ class AuthController(
 
     @PostMapping("/forgot-password")
     @IpRateLimit(
-        requests = 10,
+        requests = 50,
         duration = 1L,
         unit = TimeUnit.HOURS
     )
@@ -116,7 +116,7 @@ class AuthController(
 
     @PostMapping("/resend-verification")
     @IpRateLimit(
-        requests = 10,
+        requests = 50,
         duration = 1L,
         unit = TimeUnit.HOURS
     )
